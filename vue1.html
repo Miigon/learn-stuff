@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>rubbish_bin.push(cb);</title>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <ol>
+            <li v-for="(todo_item,i) in todo_list" v-bind:class="{'green': todo_item.finished}">
+                <span class="bold" v-bind:class="get_class_from_type(todo_item.type)">[{{ todo_item.type }}] </span>
+                <span v-if="todo_item.finished">✅</span>
+                {{ todo_item.name }}
+              <button v-on:click="todo_item.finished=!todo_item.finished">
+                  <span v-if="todo_item.finished">revert</span>
+                  <span v-if="!todo_item.finished">finish</span>
+                </button>
+              <button v-on:click="todo_list.splice(i,1)">delete</button>
+            </li>
+        </ol>
+        
+        <select v-model="select_type">
+            <option value="study">study</option>
+            <option value="life quality">life quality</option>
+            <option value="emotion">emotion</option>
+        </select>
+        <input v-model="input_content"/>
+        <button v-on:click="add">add to todo-list</button>
+        <div>
+            Finished tasks: {{todo_list.filter(v=>v.finished).length}}/{{todo_list.length}}
+        </div>
+    </div>
+    <script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            todo_list: [
+                { type: "study", name: 'join SZUEA', finished: true },
+                { type: "study", name: 'be terrified by all the dalaos', finished: true},
+                { type: "emotion", name: 'netease cloud', finished: false},
+                { type: "study", name: 'compete with LianTong in OJ', finished: true},
+                { type: "life quality", name: 'become bald', finished: false}
+            ],
+            input_content: "do hair transplant",
+            select_type: "life quality",
+        },
+        methods: {
+            get_class_from_type: function(type) {
+                return {
+                    "aunt-mom-red": type=="study",
+                    "gaylow-purple": type=="life quality",
+                    "blue": type=="emotion",
+                }
+            },
+            add: function() {
+                if(this.input_content == "") return;
+                this.todo_list.push({ type: this.select_type, name: this.input_content, finished: false });
+                this.input_content = "";
+            }
+
+        }
+    })
+    </script>
+    <style>
+        .green {
+            color: green;
+        }
+
+        .gaylow-purple {
+            color: purple;
+        }
+
+        .aunt-mom-red {
+            color: red;
+        }
+
+        .blue {
+            color: blue;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+</body>
+</html>
